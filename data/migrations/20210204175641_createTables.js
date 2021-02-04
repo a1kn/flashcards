@@ -8,7 +8,6 @@ exports.up = function(knex) {
   .createTable('flashcards', t => {
     t.increments().primary();
     t.string('title').notNull();
-    t.text('content');
     t.timestamps();
   }) 
   .createTable('languages', t => {
@@ -31,6 +30,8 @@ exports.up = function(knex) {
       .onDelete('cascade');
     t.integer('flashcards_id').references('id').inTable('flashcards').notNull()
       .onDelete('cascade');
+    t.string('title');
+    t.text('content');
     t.timestamps();
   });
 };
