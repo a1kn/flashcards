@@ -1,20 +1,20 @@
 exports.up = function(knex) {
   return knex.schema
-  .createTable('administrators', table => {
-    table.increments().primary();
-    table.string('name').notNull();
-    table.timestamps();
+  .createTable('administrators', t => {
+    t.increments().primary();
+    t.string('name').notNull();
+    t.timestamps(false, true);
   }) 
   .createTable('flashcards', t => {
     t.increments().primary();
     t.string('title').notNull();
-    t.timestamps();
+    t.timestamps(false, true);
   }) 
   .createTable('languages', t => {
     t.increments().primary();
     t.string('name').notNull();
-    t.boolean('supported').notNull();
-    t.timestamps();
+    t.boolean('enabled').notNull();
+    t.timestamps(false, true);
   }) 
   .createTable('administrators_languages', t => {
     t.increments().primary();
@@ -22,7 +22,7 @@ exports.up = function(knex) {
       .notNull().onDelete('cascade');
     t.integer('languages_id').references('id').inTable('administrators')
       .notNull().onDelete('cascade');
-    t.timestamps();
+    t.timestamps(false, true);
   }) 
   .createTable('flashcards_languages', t => {
     t.increments().primary();
@@ -32,7 +32,7 @@ exports.up = function(knex) {
       .onDelete('cascade');
     t.string('title');
     t.text('content');
-    t.timestamps();
+    t.timestamps(false, true);
   });
 };
 
