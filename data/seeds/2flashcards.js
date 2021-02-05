@@ -3,6 +3,8 @@ exports.seed = function(knex) {
     .then(function () {
       return knex('flashcards').insert([
         {title: 'First Flashcard'},
+        {title: 'Second Flashcard'},
+        {title: 'Third Flashcard'},
       ]);
     });
 };
