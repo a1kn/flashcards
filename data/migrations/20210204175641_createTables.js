@@ -18,17 +18,17 @@ exports.up = function(knex) {
   }) 
   .createTable('administrators_languages', t => {
     t.increments().primary();
-    t.integer('administrators_id').references('id').inTable('administrators')
+    t.integer('administrators_id').references('administrators.id')
       .notNull().onDelete('cascade');
-    t.integer('languages_id').references('id').inTable('administrators')
+    t.integer('languages_id').references('languages.id')
       .notNull().onDelete('cascade');
     t.timestamps(false, true);
   }) 
   .createTable('flashcards_languages', t => {
     t.increments().primary();
-    t.integer('languages_id').references('id').inTable('languages').notNull()
+    t.integer('languages_id').references('languages.id').notNull()
       .onDelete('cascade');
-    t.integer('flashcards_id').references('id').inTable('flashcards').notNull()
+    t.integer('flashcards_id').references('flashcards.id').notNull()
       .onDelete('cascade');
     t.string('title');
     t.text('content');
