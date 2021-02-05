@@ -1,7 +1,6 @@
 {
   "name": "flashcards_app",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "start": "node index",
@@ -20,5 +19,7 @@
     "express": "^4.17.1",
     "knex": "^0.21.17",
     "pg": "^8.5.1"
-  }
+  },
+  "devDependencies": {},
+  "description": ""
 }
