@@ -1,6 +1,6 @@
 import React from "react";
 
-const Card = ({ card, showModal }) => {
+const Card = ({ card, onCardClick}) => {
   const translations = card.slice(1).map((local) => (
     <li key={local.id}>
       {local.local_title}: {local.content}
@@ -9,7 +9,7 @@ const Card = ({ card, showModal }) => {
 
   const handleClick = (e) => {
     e.preventDefault();
-    showModal();
+    onCardClick(card[0].id);
   };
 
   return (

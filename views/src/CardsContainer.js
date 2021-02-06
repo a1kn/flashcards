@@ -7,6 +7,7 @@ export default class CardsContainer extends React.Component {
     super(props);
     this.state = {
       cards: {},
+      currentCard: {},
       showModal: false,
     };
   }
@@ -40,11 +41,16 @@ export default class CardsContainer extends React.Component {
       });
     };
 
+    const onCardClick = (flashcardId) => {
+      this.setState({ currentCard: this.state.cards[flashcardId][0].id });
+      showModal();
+    };
+
     const flashcards = Object.keys(this.state.cards).map((flashcardId) => (
       <Card
         key={this.state.cards[flashcardId][0].id}
         card={this.state.cards[flashcardId]}
-        showModal={showModal}
+        onCardClick={onCardClick}
       />
     ));
 
@@ -52,8 +58,8 @@ export default class CardsContainer extends React.Component {
       <div className="bg-white">
         <EditModal
           show={this.state.showModal}
-          showModal={showModal}
           hideModal={hideModal}
+          card={this.state.currentCard}
         />
 
         <div className="max-w-7xl mx-auto py-12 px-4 text-center sm:px-6 lg:px-8 lg:py-24">
