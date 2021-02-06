@@ -5,7 +5,7 @@ module.exports = {
   entry: ['@babel/polyfill', './src/index.js'],
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'index_bundle.js'
+    filename: 'scripts.js'
   },
   module: {
     rules: [
@@ -19,7 +19,7 @@ module.exports = {
       }
     ]
   },
-  mode: 'development',
+  mode: 'production',
   plugins: [
     new htmlWebpack({
         template: 'src/index.html'
