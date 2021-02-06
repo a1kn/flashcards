@@ -8,7 +8,6 @@ const port = 3000;
 const startServer = () => {
   app.use(cors());
   app.use(bodyParser.json());
-  app.get('/status', (req, res) => { res.status(200).end(); });
 
   routes(app);
 
