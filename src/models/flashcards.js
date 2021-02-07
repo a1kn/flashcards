@@ -9,7 +9,7 @@ module.exports = {
         "flashcards.title",
         "flashcards_languages.title as local_title",
         "flashcards_languages.content",
-        "flashcards_languages.languages_id as language_id",
+        "flashcards_languages.languages_id as language_id"
       )
       .from("flashcards")
       .join(
@@ -49,31 +49,33 @@ module.exports = {
   },
 
   async create(title, content, locals) {
-    await db("flashcards")
-      .returning("id")
-      .insert({ title })
-      .then((cardId) => {
-        db("flashcards_languages")
-          .insert({
-            languages_id: 1,
-            flashcards_id: cardId[0],
-            title,
-            content,
-          })
-          .then(() => {
-            if (locals) {
-              locals.forEach((local) => {
-                db("flashcards_languages")
-                  .insert({
-                    title: local.title,
-                    languages_id: local.languageId,
-                    flashcards_id: cardId[0],
-                    content: local.content,
-                  })
-                  .then(() => cardId[0]);
-              });
-            }
-          });
-      });
+    return new Promise((resolve, reject) => {
+      return db("flashcards")
+        .returning("id")
+        .insert({ title })
+        .then((cardId) => {
+          db("flashcards_languages")
+            .insert({
+              languages_id: 1,
+              flashcards_id: cardId[0],
+              title,
+              content,
+            })
+            .then(() => {
+              if (locals) {
+                locals.forEach((local) => {
+                  db("flashcards_languages")
+                    .insert({
+                      title: local.title,
+                      languages_id: local.languageId,
+                      flashcards_id: cardId[0],
+                      content: local.content,
+                    })
+                    .then(() => resolve(cardId[0]));
+                });
+              }
+            });
+        });
+    });
   },
 };
