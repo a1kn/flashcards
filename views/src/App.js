@@ -3,6 +3,7 @@ import CardsContainer from "./CardsContainer";
 import CardsModal from "./CardsModal";
 import Header from "./Header";
 import LanguagesModal from "./LanguagesModal";
+import SelectMenu from "./SelectMenu";
 
 export default class App extends React.Component {
   constructor(props) {
@@ -10,6 +11,7 @@ export default class App extends React.Component {
     this.state = {
       cards: [],
       currentCard: {},
+      currentCards: [],
       showCardsModal: false,
       showLanguagesModal: false,
       languages: [],
@@ -42,6 +44,7 @@ export default class App extends React.Component {
     });
 
     this.setState({ cards: data });
+    this.setState({ currentCards: data });
 
     const defaultLocals = this.state.languages.slice(1).map((language) => {
       return {
@@ -80,22 +83,6 @@ export default class App extends React.Component {
 
     const onCardClick = (id) => {
       const card = this.state.cards.find((card) => card.id === id);
-      // const locals = this.state.languages
-      //   .filter((language) => language.enabled && language.id !== 1)
-      //   .map((local) => {
-      //     const existing = card.locals.find(
-      //       (l) => (l.languageId = local.languageId)
-      //     );
-      //     if (existing) {
-      //       return existing;
-      //     } else {
-      //       return {
-      //         languageId: local.languageId,
-      //         content: "",
-      //         title: "",
-      //       };
-      //     }
-      //   });
 
       this.setState({
         currentCard: card,
@@ -143,6 +130,24 @@ export default class App extends React.Component {
       hideLanguagesModal();
     };
 
+    const handleSelect = (e) => {
+      const languageId = +e.target.value;
+
+      if (languageId === 1) {
+        return this.setState({ currentCards: this.state.cards });
+      }
+
+      const filteredCards = this.state.cards.filter((card) => {
+        const local = card.locals.find(
+          (local) => local.languageId === languageId
+        );
+        if (!local) return false;
+        return local.title || local.content;
+      });
+
+      this.setState({ currentCards: filteredCards });
+    };
+
     return (
       <>
         <CardsModal
@@ -164,7 +169,14 @@ export default class App extends React.Component {
           showLanguagesModal={showLanguagesModal}
           languages={this.state.languages}
         />
-        <CardsContainer cards={this.state.cards} onCardClick={onCardClick} />
+        <SelectMenu
+          languages={this.state.languages}
+          handleSelect={handleSelect}
+        />
+        <CardsContainer
+          cards={this.state.currentCards}
+          onCardClick={onCardClick}
+        />
       </>
     );
   }

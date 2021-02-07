@@ -132,7 +132,6 @@ class CardsModal extends React.Component {
               <input
                 type="text"
                 name="title"
-                id="title"
                 className="p-2 max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
                 value={local ? local.title : ""}
                 onChange={handleLocalTitleChange}
@@ -146,7 +145,6 @@ class CardsModal extends React.Component {
             </label>
             <div className="mt-1 sm:mt-0 sm:col-span-2">
               <textarea
-                id="content"
                 name="content"
                 rows="2"
                 className="p-2 max-w-lg shadow-sm block w-full focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
@@ -213,7 +211,6 @@ class CardsModal extends React.Component {
                       <input
                         type="text"
                         name="title"
-                        id="title"
                         className="p-2 max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
                         value={this.state.title}
                         onChange={handleTitleChange}
@@ -230,7 +227,6 @@ class CardsModal extends React.Component {
                     </label>
                     <div className="mt-1 sm:mt-0 sm:col-span-2">
                       <textarea
-                        id="content"
                         name="content"
                         rows="5"
                         className="p-2 max-w-lg shadow-sm block w-full focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
