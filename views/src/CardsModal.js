@@ -4,6 +4,7 @@ class CardsModal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      id: "",
       title: "",
       content: "",
       locals: [],
@@ -11,10 +12,7 @@ class CardsModal extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (
-      this.props.card !== prevProps.card &&
-      Object.keys(this.props.card).length > 0
-    ) {
+    if (this.props.card !== prevProps.card) {
       this.setState(this.props.card);
     }
   }
@@ -28,20 +26,11 @@ class CardsModal extends React.Component {
       handleNewCard,
       handleUpdateCard,
     } = this.props;
-    if (!show) return null;
 
-    const resetState = () => {
-      this.setState({
-        id: "",
-        title: "",
-        content: "",
-        locals: [],
-      });
-    };
+    if (!show) return null;
 
     const handleOutsideClick = (e) => {
       e.preventDefault();
-      resetState();
       hideModal();
     };
 
@@ -64,7 +53,7 @@ class CardsModal extends React.Component {
     const handleSubmit = async (e) => {
       e.preventDefault();
 
-      if (Object.keys(card).length > 0) {
+      if (this.state.id) {
         const update = this.state;
         const response = await fetch(
           "http://localhost:3000/api/flashcards/update",
@@ -202,10 +191,10 @@ class CardsModal extends React.Component {
               <div className="space-y-6 sm:space-y-5">
                 <div>
                   <h3 className="text-lg leading-6 font-medium text-gray-900">
-                    {Object.keys(card).length > 0 ? "Edit" : "Add"}
+                    {this.state.id ? "Edit" : "Add"}
                   </h3>
                   <p className="mt-1 max-w-2xl text-sm text-gray-500">
-                    {Object.keys(card).length > 0
+                    {this.state.id
                       ? "Edit this flashcard"
                       : "Add a new flashcard."}
                   </p>

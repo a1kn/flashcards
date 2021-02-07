@@ -42,6 +42,18 @@ export default class App extends React.Component {
     });
 
     this.setState({ cards: data });
+
+    const defaultLocals = this.state.languages.slice(1).map((language) => {
+      return {
+        languageId: language.id,
+        title: "",
+        content: "",
+      };
+    });
+
+    this.setState({
+      currentCard: { id: "", content: "", title: "", locals: defaultLocals },
+    });
   }
 
   render() {
@@ -52,8 +64,16 @@ export default class App extends React.Component {
     };
 
     const hideCardsModal = () => {
+      const defaultLocals = this.state.languages.slice(1).map((language) => {
+        return {
+          languageId: language.id,
+          title: "",
+          content: "",
+        };
+      });
+
       this.setState({
-        currentCard: {},
+        currentCard: { id: "", content: "", title: "", locals: defaultLocals },
         showCardsModal: false,
       });
     };
