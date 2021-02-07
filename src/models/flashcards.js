@@ -37,7 +37,6 @@ module.exports = {
         content: variants[0].content,
         locals: variants.slice(1).map((variant) => {
           return {
-            id: variant.id,
             title: variant.local_title,
             languageId: variant.language_id,
             content: variant.content,
