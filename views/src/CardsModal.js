@@ -11,38 +11,11 @@ class CardsModal extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.languages !== prevProps.languages) {
-      this.setState({
-        locals: this.props.languages
-          .filter((l) => l.enabled && l.id !== 1)
-          .map((language) => {
-            return {
-              title: "",
-              languageId: language.id,
-              content: "",
-            };
-          }),
-      });
-    }
-
     if (
       this.props.card !== prevProps.card &&
       Object.keys(this.props.card).length > 0
     ) {
-      this.setState({
-        title: this.props.card.title,
-        content: this.props.card.content,
-      });
-
-      this.setState({
-        locals: this.state.locals.map((local) => {
-          const record = this.props.card.locals.find(
-            (l) => l.languageId === local.languageId
-          );
-          if (record) return record;
-          return local;
-        }),
-      });
+      this.setState(this.props.card);
     }
   }
 
@@ -59,21 +32,10 @@ class CardsModal extends React.Component {
 
     const resetState = () => {
       this.setState({
+        id: "",
         title: "",
         content: "",
         locals: [],
-      });
-
-      this.setState({
-        locals: languages
-          .filter((l) => l.enabled && l.id !== 1)
-          .map((language) => {
-            return {
-              title: "",
-              languageId: language.id,
-              content: "",
-            };
-          }),
       });
     };
 
@@ -103,7 +65,7 @@ class CardsModal extends React.Component {
       e.preventDefault();
 
       if (Object.keys(card).length > 0) {
-        const update = Object.assign(this.state, { id: card.id }, {});
+        const update = this.state;
         const response = await fetch(
           "http://localhost:3000/api/flashcards/update",
           {
@@ -116,7 +78,6 @@ class CardsModal extends React.Component {
         );
 
         if (response.status === 200) {
-          console.log(response.status);
           handleUpdateCard(update);
         }
       } else {

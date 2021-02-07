@@ -94,33 +94,28 @@ module.exports = {
               content,
             })
             .then(() => {
-              locals.forEach((local) => {
-                db("flashcards_languages")
+              locals.forEach(async (local) => {
+                const rows = await db("flashcards_languages")
                   .select()
-                  .where({ flashcards_id: id, languages_id: local.languageId })
-                  .then((rows) => {
-                    console.log(rows);
-                    if (rows.length === 0) {
-                      resolve(
-                        db("flashcards_languages").insert({
-                          title: local.title,
-                          content: local.content,
-                          languages_id: local.languageId,
-                          flashcards_id: id,
-                        })
-                      );
-                    } else {
-                      resolve(
-                        db("flashcards_languages")
-                          .where({ id: rows[0].id })
-                          .update({
-                            title: local.title,
-                            content: local.content,
-                          })
-                      );
-                    }
+                  .where({ flashcards_id: id, languages_id: local.languageId });
+
+                if (rows.length === 0) {
+                  await db("flashcards_languages").insert({
+                    title: local.title,
+                    content: local.content,
+                    languages_id: local.languageId,
+                    flashcards_id: id,
                   });
+                } else {
+                  await db("flashcards_languages")
+                    .where({ id: rows[0].id })
+                    .update({
+                      title: local.title,
+                      content: local.content,
+                    });
+                }
               });
+              resolve();
             });
         });
     });

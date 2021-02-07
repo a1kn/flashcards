@@ -17,15 +17,31 @@ export default class App extends React.Component {
   }
 
   async componentDidMount() {
-    let url = "http://localhost:3000/api/flashcards";
+    let url = "http://localhost:3000/api/languages";
     let response = await fetch(url);
     let data = await response.json();
-    this.setState({ cards: data });
+    this.setState({ languages: data });
 
-    url = "http://localhost:3000/api/languages";
+    url = "http://localhost:3000/api/flashcards";
     response = await fetch(url);
     data = await response.json();
-    this.setState({ languages: data });
+
+    data.forEach((card) => {
+      const locals = this.state.languages.slice(1).map((language) => {
+        const record = card.locals.find(
+          (local) => local.languageId === language.id
+        );
+        if (record) return record;
+        return {
+          languageId: language.id,
+          content: "",
+          title: "",
+        };
+      });
+      card.locals = locals;
+    });
+
+    this.setState({ cards: data });
   }
 
   render() {
@@ -43,8 +59,26 @@ export default class App extends React.Component {
     };
 
     const onCardClick = (id) => {
+      const card = this.state.cards.find((card) => card.id === id);
+      // const locals = this.state.languages
+      //   .filter((language) => language.enabled && language.id !== 1)
+      //   .map((local) => {
+      //     const existing = card.locals.find(
+      //       (l) => (l.languageId = local.languageId)
+      //     );
+      //     if (existing) {
+      //       return existing;
+      //     } else {
+      //       return {
+      //         languageId: local.languageId,
+      //         content: "",
+      //         title: "",
+      //       };
+      //     }
+      //   });
+
       this.setState({
-        currentCard: this.state.cards.find((card) => card.id === id),
+        currentCard: card,
       });
 
       showCardsModal();
@@ -79,6 +113,16 @@ export default class App extends React.Component {
       this.setState({ showLanguagesModal: true });
     };
 
+    const handleUpdateLanguages = (langs) => {
+      const languages = langs.map((lang) => {
+        const name = this.state.languages.find((l) => l.id === lang.id).name;
+        return Object.assign({}, lang, { name });
+      });
+
+      this.setState({ languages });
+      hideLanguagesModal();
+    };
+
     return (
       <>
         <CardsModal
@@ -93,6 +137,7 @@ export default class App extends React.Component {
           languages={this.state.languages}
           show={this.state.showLanguagesModal}
           hide={hideLanguagesModal}
+          handleUpdateLanguages={handleUpdateLanguages}
         />
         <Header
           showCardsModal={showCardsModal}

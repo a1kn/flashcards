@@ -27,7 +27,7 @@ class LanguagesModal extends React.Component {
   }
 
   render() {
-    const { show, hide, languages } = this.props;
+    const { show, hide, languages, handleUpdateLanguages } = this.props;
 
     if (!show) return null;
 
@@ -37,6 +37,7 @@ class LanguagesModal extends React.Component {
       this.props.languages.forEach(
         (language) => (checked[language.id] = language.enabled)
       );
+
       this.setState({ checked });
     };
 
@@ -48,6 +49,29 @@ class LanguagesModal extends React.Component {
 
     const handleInsideClick = (e) => {
       e.stopPropagation();
+    };
+
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+
+      const update = Object.keys(this.state.checked).map((id) => {
+        return {
+          id: +id,
+          enabled: this.state.checked[id],
+        };
+      });
+
+      const response = await fetch("http://localhost:3000/api/languages", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(update),
+      });
+
+      if (response.status === 200) {
+        handleUpdateLanguages(update);
+      }
     };
 
     const languagesSelectors = languages.map((language) => {
@@ -104,7 +128,7 @@ class LanguagesModal extends React.Component {
             onClick={handleInsideClick}
           >
             <div>
-              <form action="#" method="POST">
+              <form onSubmit={handleSubmit}>
                 <div class="shadow overflow-hidden sm:rounded-md">
                   <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
                     <fieldset>
