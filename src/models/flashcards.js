@@ -30,12 +30,16 @@ module.exports = {
     }
 
     data = Object.keys(cards).map((flashcard_id) => {
-      const variants = cards[flashcard_id];
+      const main = cards[flashcard_id].find((card) => card.language_id === 1);
+      const variants = cards[flashcard_id].filter(
+        (card) => card.language_id !== 1
+      );
+
       return {
         id: flashcard_id,
-        title: variants[0].title,
-        content: variants[0].content,
-        locals: variants.slice(1).map((variant) => {
+        title: main.title,
+        content: main.content,
+        locals: variants.map((variant) => {
           return {
             title: variant.local_title,
             languageId: variant.language_id,

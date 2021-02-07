@@ -13,13 +13,16 @@ class CardsModal extends React.Component {
   componentDidUpdate(prevProps) {
     if (this.props.languages !== prevProps.languages) {
       this.setState({
-        locals: this.props.languages.slice(1).map((language) => {
-          return {
-            title: "",
-            languageId: language.id,
-            content: "",
-          };
-        }),
+        locals: this.props.languages
+          .slice(1)
+          .filter((l) => l.enabled)
+          .map((language) => {
+            return {
+              title: "",
+              languageId: language.id,
+              content: "",
+            };
+          }),
       });
     }
 
@@ -63,13 +66,16 @@ class CardsModal extends React.Component {
       });
 
       this.setState({
-        locals: languages.slice(1).map((language) => {
-          return {
-            title: "",
-            languageId: language.id,
-            content: "",
-          };
-        }),
+        locals: languages
+          .slice(1)
+          .filter((l) => l.enabled)
+          .map((language) => {
+            return {
+              title: "",
+              languageId: language.id,
+              content: "",
+            };
+          }),
       });
     };
 
@@ -112,7 +118,7 @@ class CardsModal extends React.Component {
         );
 
         if (response.status === 200) {
-          console.log(response.status)
+          console.log(response.status);
           handleUpdateCard(update);
         }
       } else {

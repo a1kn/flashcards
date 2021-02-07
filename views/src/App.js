@@ -2,6 +2,7 @@ import React from "react";
 import CardsContainer from "./CardsContainer";
 import CardsModal from "./CardsModal";
 import Header from "./Header";
+import LanguagesModal from "./LanguagesModal";
 
 export default class App extends React.Component {
   constructor(props) {
@@ -10,6 +11,7 @@ export default class App extends React.Component {
       cards: [],
       currentCard: {},
       showCardsModal: false,
+      showLanguagesModal: false,
       languages: [],
     };
   }
@@ -23,8 +25,7 @@ export default class App extends React.Component {
     url = "http://localhost:3000/api/languages";
     response = await fetch(url);
     data = await response.json();
-    const languages = data.filter((language) => language.enabled);
-    this.setState({ languages });
+    this.setState({ languages: data });
   }
 
   render() {
@@ -70,6 +71,14 @@ export default class App extends React.Component {
       hideCardsModal();
     };
 
+    const hideLanguagesModal = () => {
+      this.setState({ showLanguagesModal: false });
+    };
+
+    const showLanguagesModal = () => {
+      this.setState({ showLanguagesModal: true });
+    };
+
     return (
       <>
         <CardsModal
@@ -80,9 +89,15 @@ export default class App extends React.Component {
           handleNewCard={handleNewCard}
           handleUpdateCard={handleUpdateCard}
         />
+        <LanguagesModal
+          show={this.state.showLanguagesModal}
+          hide={hideLanguagesModal}
+        />
         <Header
           languages={this.state.languages}
           showCardsModal={showCardsModal}
+          showLanguagesModal={showLanguagesModal}
+          languages={this.state.languages}
         />
         <CardsContainer cards={this.state.cards} onCardClick={onCardClick} />
       </>
