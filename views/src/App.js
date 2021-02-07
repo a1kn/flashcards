@@ -23,7 +23,8 @@ export default class App extends React.Component {
     url = "http://localhost:3000/api/languages";
     response = await fetch(url);
     data = await response.json();
-    this.setState({ languages: data });
+    const languages = data.filter((language) => language.enabled);
+    this.setState({ languages });
   }
 
   render() {
@@ -50,7 +51,20 @@ export default class App extends React.Component {
 
     const handleNewCard = (card) => {
       this.setState({
-        cards: [...this.state.cards, card]
+        cards: [...this.state.cards, card],
+      });
+
+      hideCardsModal();
+    };
+
+    const handleUpdateCard = (card) => {
+      const updatedCards = this.state.cards.map((c) => {
+        if (c.id !== card.id) return c;
+        return card;
+      });
+
+      this.setState({
+        cards: updatedCards,
       });
 
       hideCardsModal();
@@ -64,6 +78,7 @@ export default class App extends React.Component {
           card={this.state.currentCard}
           languages={this.state.languages}
           handleNewCard={handleNewCard}
+          handleUpdateCard={handleUpdateCard}
         />
         <Header
           languages={this.state.languages}

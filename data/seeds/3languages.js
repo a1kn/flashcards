@@ -5,6 +5,8 @@ exports.seed = function(knex) {
         {name: 'English', enabled: true},
         {name: 'Spanish', enabled: true},
         {name: 'German', enabled: false},
+        {name: 'French', enabled: false},
+        {name: 'Chinese', enabled: false},
       ]);
     });
 };

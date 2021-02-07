@@ -48,7 +48,7 @@ module.exports = {
     return data;
   },
 
-  async create(title, content, locals) {
+  create({ title, content, locals }) {
     return new Promise((resolve, reject) => {
       return db("flashcards")
         .returning("id")
@@ -62,18 +62,61 @@ module.exports = {
               content,
             })
             .then(() => {
-              if (locals) {
-                locals.forEach((local) => {
-                  db("flashcards_languages")
-                    .insert({
-                      title: local.title,
-                      languages_id: local.languageId,
-                      flashcards_id: cardId[0],
-                      content: local.content,
-                    })
-                    .then(() => resolve(cardId[0]));
-                });
-              }
+              locals.forEach((local) => {
+                db("flashcards_languages")
+                  .insert({
+                    title: local.title,
+                    content: local.content,
+                    languages_id: local.languageId,
+                    flashcards_id: cardId[0],
+                  })
+                  .then(() => resolve(cardId[0]));
+              });
+            });
+        });
+    });
+  },
+
+  update({ id, title, content, locals }) {
+    return new Promise((resolve, reject) => {
+      return db("flashcards")
+        .where({ id })
+        .update({ title })
+        .then(() => {
+          db("flashcards_languages")
+            .where({ flashcards_id: id, languages_id: 1 })
+            .update({
+              title,
+              content,
+            })
+            .then(() => {
+              locals.forEach((local) => {
+                db("flashcards_languages")
+                  .select()
+                  .where({ flashcards_id: id, languages_id: local.languageId })
+                  .then((rows) => {
+                    console.log(rows);
+                    if (rows.length === 0) {
+                      resolve(
+                        db("flashcards_languages").insert({
+                          title: local.title,
+                          content: local.content,
+                          languages_id: local.languageId,
+                          flashcards_id: id,
+                        })
+                      );
+                    } else {
+                      resolve(
+                        db("flashcards_languages")
+                          .where({ id: rows[0].id })
+                          .update({
+                            title: local.title,
+                            content: local.content,
+                          })
+                      );
+                    }
+                  });
+              });
             });
         });
     });

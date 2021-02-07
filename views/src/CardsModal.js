@@ -13,7 +13,7 @@ class CardsModal extends React.Component {
   componentDidUpdate(prevProps) {
     if (this.props.languages !== prevProps.languages) {
       this.setState({
-        locals: this.props.languages.map((language) => {
+        locals: this.props.languages.slice(1).map((language) => {
           return {
             title: "",
             languageId: language.id,
@@ -45,7 +45,14 @@ class CardsModal extends React.Component {
   }
 
   render() {
-    const { show, hideModal, card, languages, handleNewCard } = this.props;
+    const {
+      show,
+      hideModal,
+      card,
+      languages,
+      handleNewCard,
+      handleUpdateCard,
+    } = this.props;
     if (!show) return null;
 
     const resetState = () => {
@@ -56,7 +63,7 @@ class CardsModal extends React.Component {
       });
 
       this.setState({
-        locals: languages.map((language) => {
+        locals: languages.slice(1).map((language) => {
           return {
             title: "",
             languageId: language.id,
@@ -91,18 +98,37 @@ class CardsModal extends React.Component {
     const handleSubmit = async (e) => {
       e.preventDefault();
 
-      const response = await fetch("http://localhost:3000/api/flashcards", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(this.state),
-      });
+      if (Object.keys(card).length > 0) {
+        const update = Object.assign(this.state, { id: card.id }, {});
+        const response = await fetch(
+          "http://localhost:3000/api/flashcards/update",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(update),
+          }
+        );
 
-      if (response.status === 200) {
-        const id = await response.json();
-        const newCard = Object.assign(this.state, id, {});
-        handleNewCard(newCard);
+        if (response.status === 200) {
+          console.log(response.status)
+          handleUpdateCard(update);
+        }
+      } else {
+        const response = await fetch("http://localhost:3000/api/flashcards", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(this.state),
+        });
+
+        if (response.status === 200) {
+          const id = await response.json();
+          const newCard = Object.assign(this.state, id, {});
+          handleNewCard(newCard);
+        }
       }
     };
 

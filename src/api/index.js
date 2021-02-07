@@ -1,12 +1,14 @@
 const getFlashcards = require('./routes/getFlashcards');
-const postFlashcards = require('./routes/postFlashcards');
+const addFlashcard = require('./routes/postFlashcards');
 const getIndex= require('./routes/getIndex');
 const getLanguages = require('./routes/getLanguages');
+const updateFlashcard = require('./routes/updateFlashcard');
 
 module.exports = (app) => {
   getIndex(app);
   getLanguages(app);
   getFlashcards(app);
-  postFlashcards(app);
+  addFlashcard(app);
+  updateFlashcard(app);
   return app;
 };
