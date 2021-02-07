@@ -8,7 +8,8 @@ module.exports = {
         "flashcards.id as flashcard_id",
         "flashcards.title",
         "flashcards_languages.title as local_title",
-        "flashcards_languages.content"
+        "flashcards_languages.content",
+        "flashcards_languages.languages_id as language_id",
       )
       .from("flashcards")
       .join(
@@ -28,24 +29,28 @@ module.exports = {
       }
     }
 
-    return Object.keys(cards).map((flashcard_id) => {
+    data = Object.keys(cards).map((flashcard_id) => {
       const variants = cards[flashcard_id];
       return {
         id: flashcard_id,
         title: variants[0].title,
+        content: variants[0].content,
         locals: variants.slice(1).map((variant) => {
           return {
+            id: variant.id,
             title: variant.local_title,
-            languageId: variant.id,
+            languageId: variant.language_id,
             content: variant.content,
           };
         }),
       };
     });
+
+    return data;
   },
 
   async create(title, content, locals) {
-    db("flashcards")
+    await db("flashcards")
       .returning("id")
       .insert({ title })
       .then((cardId) => {

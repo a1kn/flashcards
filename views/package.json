@@ -13,7 +13,10 @@
     "buildcss": "postcss src/tailwind.css -o src/tailwind.generated.css",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack serve",
-    "build": "run-p buildcss && webpack"
+    "build": "run-p buildcss && webpack",
+    "seed": "npm run knex seed:run",
+    "migrate": "npm run knex migrate:latest",
+    "rollback": "npm run knex migrate:rollback"
   },
   "keywords": [],
   "author": "",

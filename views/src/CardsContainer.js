@@ -6,26 +6,23 @@ export default class CardsContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      cards: {},
+      cards: [],
       currentCard: {},
       showModal: false,
+      languages: [],
     };
   }
+
   async componentDidMount() {
-    const url = "http://localhost:3000/api/flashcards";
-    const response = await fetch(url);
-    const data = await response.json();
-    let cards = {};
+    let url = "http://localhost:3000/api/flashcards";
+    let response = await fetch(url);
+    let data = await response.json();
+    this.setState({ cards: data });
 
-    data.forEach((card) => {
-      if (cards[card.flashcard_id]) {
-        cards[card.flashcard_id].push(card);
-      } else {
-        cards[card.flashcard_id] = [card];
-      }
-    });
-
-    this.setState({ cards });
+    url = 'http://localhost:3000/api/languages';
+    response = await fetch(url);
+    data = await response.json();
+    this.setState({ languages: data });
   }
 
   render() {
@@ -41,17 +38,15 @@ export default class CardsContainer extends React.Component {
       });
     };
 
-    const onCardClick = (flashcardId) => {
-      this.setState({ currentCard: this.state.cards[flashcardId][0].id });
+    const onCardClick = (id) => {
+      this.setState({
+        currentCard: this.state.cards.find((card) => card.id === id),
+      });
       showModal();
     };
 
-    const flashcards = Object.keys(this.state.cards).map((flashcardId) => (
-      <Card
-        key={this.state.cards[flashcardId][0].id}
-        card={this.state.cards[flashcardId]}
-        onCardClick={onCardClick}
-      />
+    const flashcards = this.state.cards.map((card) => (
+      <Card key={card.id} card={card} onCardClick={onCardClick} />
     ));
 
     return (
@@ -60,6 +55,7 @@ export default class CardsContainer extends React.Component {
           show={this.state.showModal}
           hideModal={hideModal}
           card={this.state.currentCard}
+          languages={this.state.languages}
         />
 
         <div className="max-w-7xl mx-auto py-12 px-4 text-center sm:px-6 lg:px-8 lg:py-24">
