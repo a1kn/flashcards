@@ -3,15 +3,42 @@ import React from "react";
 class LanguagesModal extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+
+    const checked = {};
+
+    this.props.languages.forEach(
+      (language) => (checked[language.id] = language.enabled)
+    );
+
+    this.state = {
+      checked,
+    };
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.languages !== prevProps.languages) {
+      const checked = {};
+
+      this.props.languages.forEach(
+        (language) => (checked[language.id] = language.enabled)
+      );
+      this.setState({ checked });
+    }
   }
 
   render() {
-    const { show, hide } = this.props;
+    const { show, hide, languages } = this.props;
 
     if (!show) return null;
 
-    const resetState = () => {};
+    const resetState = () => {
+      const checked = {};
+
+      this.props.languages.forEach(
+        (language) => (checked[language.id] = language.enabled)
+      );
+      this.setState({ checked });
+    };
 
     const handleOutsideClick = (e) => {
       e.preventDefault();
@@ -22,6 +49,37 @@ class LanguagesModal extends React.Component {
     const handleInsideClick = (e) => {
       e.stopPropagation();
     };
+
+    const languagesSelectors = languages.map((language) => {
+      const handleCheck = () => {
+        const checked = Object.assign(this.state.checked, {
+          [language.id]: !this.state.checked[language.id],
+        });
+        this.setState({ checked });
+      };
+
+      return (
+        <div class="flex items-start">
+          <div class="flex items-center h-5">
+            <input
+              name={language.name}
+              defaultChecked={language.enabled}
+              disabled={language.id === 1}
+              type="checkbox"
+              checked={this.state.checked[language.id]}
+              class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+              onClick={handleCheck}
+            />
+          </div>
+          <div class="ml-3 text-sm">
+            <label for="comments" class="font-medium text-gray-700">
+              {language.name}
+            </label>
+            <p class="text-gray-500">Enable {language.name} localizations</p>
+          </div>
+        </div>
+      );
+    });
 
     return (
       <div
@@ -39,52 +97,33 @@ class LanguagesModal extends React.Component {
             &#8203;
           </span>
           <div
-            className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-sm sm:w-full sm:p-6"
+            className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-sm sm:w-full"
             role="dialog"
             aria-modal="true"
             aria-labelledby="modal-headline"
             onClick={handleInsideClick}
           >
             <div>
-              <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
-                <svg
-                  className="h-6 w-6 text-green-600"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  aria-hidden="true"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
-              </div>
-              <div className="mt-3 text-center sm:mt-5">
-                <h3
-                  className="text-lg leading-6 font-medium text-gray-900"
-                  id="modal-headline"
-                >
-                  Payment successful
-                </h3>
-                <div className="mt-2">
-                  <p className="text-sm text-gray-500">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Consequatur amet labore.
-                  </p>
+              <form action="#" method="POST">
+                <div class="shadow overflow-hidden sm:rounded-md">
+                  <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
+                    <fieldset>
+                      <legend class="text-base font-medium text-gray-900">
+                        Localizations
+                      </legend>
+                      <div class="mt-4 space-y-4">{languagesSelectors}</div>
+                    </fieldset>
+                  </div>
+                  <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+                    <button
+                      type="submit"
+                      class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    >
+                      Save
+                    </button>
+                  </div>
                 </div>
-              </div>
-            </div>
-            <div className="mt-5 sm:mt-6">
-              <button
-                type="button"
-                className="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:text-sm"
-              >
-                Go back to dashboard
-              </button>
+              </form>
             </div>
           </div>
         </div>

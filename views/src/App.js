@@ -90,11 +90,11 @@ export default class App extends React.Component {
           handleUpdateCard={handleUpdateCard}
         />
         <LanguagesModal
+          languages={this.state.languages}
           show={this.state.showLanguagesModal}
           hide={hideLanguagesModal}
         />
         <Header
-          languages={this.state.languages}
           showCardsModal={showCardsModal}
           showLanguagesModal={showLanguagesModal}
           languages={this.state.languages}

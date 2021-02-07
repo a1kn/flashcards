@@ -14,8 +14,7 @@ class CardsModal extends React.Component {
     if (this.props.languages !== prevProps.languages) {
       this.setState({
         locals: this.props.languages
-          .slice(1)
-          .filter((l) => l.enabled)
+          .filter((l) => l.enabled && l.id !== 1)
           .map((language) => {
             return {
               title: "",
@@ -67,8 +66,7 @@ class CardsModal extends React.Component {
 
       this.setState({
         locals: languages
-          .slice(1)
-          .filter((l) => l.enabled)
+          .filter((l) => l.enabled && l.id !== 1)
           .map((language) => {
             return {
               title: "",
