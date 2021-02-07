@@ -100,7 +100,9 @@ class CardsModal extends React.Component {
       });
 
       if (response.status === 200) {
-        handleNewCard(this.state);
+        const id = await response.json();
+        const newCard = Object.assign(this.state, id, {});
+        handleNewCard(newCard);
       }
     };
 
