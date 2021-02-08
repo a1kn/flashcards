@@ -1,6 +1,6 @@
 # FlashCards App
 
-![screenshot](https://github.com/bigspring-interviews/a1kn-casestudy/blob/master/img/app.png?raw=true)
+![screenshot](https://github.com/a1kn/blob/master/img/app.png?raw=true)
 
 ## Install
 1. Setup a `.env` file in the project's root. It should contain the information
@@ -20,4 +20,4 @@
 5. `npm run start` to start the server.
 6. Find the app at http://localhost:3000
 
-![erd](https://github.com/bigspring-interviews/a1kn-casestudy/blob/master/img/erd.png?raw=true)
+![erd](https://github.com/a1kn/blob/master/img/erd.png?raw=true)
